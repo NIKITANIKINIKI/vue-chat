@@ -1,0 +1,25 @@
+<template>
+  <div class="loader-block">
+    <span> </span>
+    <span> </span>
+    <span> </span>
+  </div>
+</template>
+
+<style scoped>
+
+.loader-block{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 20px;
+}
+
+.loader-block span{
+  
+    
+}
+
+
+</style>
