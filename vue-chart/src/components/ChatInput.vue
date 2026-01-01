@@ -21,6 +21,18 @@ import MicButton from "./MicButton.vue";
 const message = ref("");
 const { sendMessage } = useChat();
 
+let recognition: SpeechRecognition | null = null;
+
+if ("webkitSpeechRecognition" in window) {
+  const SpeechRecognition = window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  if (recognition) {
+    recognition.lang = "ru-RU";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+  }
+}
+
 async function handleSubmit() {
   if (!message.value.trim()) return;
   const res = await sendMessage(message.value);
@@ -29,9 +41,21 @@ async function handleSubmit() {
   }
 }
 
-function onVoiceStart() {}
+function onVoiceStart() {
+  if (!recognition) return;
+  recognition.start();
+  recognition.onresult = (event: SpeechRecognitionEvent) => {
+    const result = Array.from(event.results)
+      .map((r) => r[0].transcript)
+      .join(" ");
 
-function onVoiceStop() {}
+    message.value = result;
+  };
+}
+
+function onVoiceStop() {
+  recognition?.stop();
+}
 </script>
 
 <style scoped>
